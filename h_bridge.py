@@ -1,25 +1,9 @@
-#
-# Open-BLDC pysim - Open BrushLess DC Motor Controller python simulator
-# Copyright (C) 2011 by Antoine Drouin <poinix@gmail.com>
-# Copyright (C) 2011 by Piotr Esden-Tempski <piotr@esden.net>
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
+__author__ = ("Antoine Drouin <poinix@gmail.com>", "Piotr Esden-Tempski <piotr@esden.net>")
+__licence__ = "GPL3"
 
 import numpy as np
 
-import dyn_model  as dm
+import motor as dm
 
 import misc_utils as mu
 
@@ -27,7 +11,7 @@ import math
 
 PWM_freq = 16000
 PWM_cycle_time = (1./16000)
-PWM_duty = 0.6
+PWM_duty = 0.4
 PWM_duty_time = PWM_cycle_time * PWM_duty
 
 debug = False
@@ -197,12 +181,12 @@ def run_hpwm_l_on(Sp, Y, t):
         # W off
         if math.fmod(t, PWM_cycle_time) <= PWM_duty_time:
             hu = 1
-	    lu = 0
+            lu = 0
             hv = 0
             lv = 1
         else:
             hu = 0
-	    lu = 1
+            lu = 1
             hv = 1
             lv = 0
         hw = 0
@@ -311,9 +295,6 @@ def run_hpwm_l_on(Sp, Y, t):
 
     return U
 
-
-#
-#
 # Sp setpoint, Y output
 #
 def run(Sp, Y, t):
