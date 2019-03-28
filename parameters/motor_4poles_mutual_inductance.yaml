@@ -1,0 +1,9 @@
+inertia: 0.000007
+damping: 0.0011666
+velocity_constant: 30.959
+coil_inductance: 0.00207
+mutual_inductance: -0.00069
+phase_resistance: 11.9
+supply_voltage: 100.
+n_poles: 4.
+diode_forward_voltage: 0.

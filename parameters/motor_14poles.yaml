@@ -1,0 +1,9 @@
+inertia: 0.0022  # aka. 'J' in kg/(m^2)
+damping: 0.001  # aka. 'B' in Nm/(rad/s)
+velocity_constant: 1700.  # aka. motor constant in RPM/V
+coil_inductance: 0.00312  # aka. Coil inductance in H
+mutual_inductance: 0.0  # aka. Mutual inductance in H
+phase_resistance: 0.8  # aka. Phase resistence in Ohm
+supply_voltage: 100.  # aka. Supply voltage
+n_poles: 14  # NbPoles / 2 = Number of pole pairs (you count the permanent magnets on the rotor to get NbPoles)
+diode_forward_voltage: .7  # aka. freewheeling diode forward voltage
