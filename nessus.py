@@ -35,31 +35,33 @@ def print_simulation_progress(count, steps, pbar):
     sim_perc_last = np.ceil(((count - 1) * 100) / steps)
     sim_perc = np.ceil((count * 100) / steps)
 
-    if (sim_perc_last != sim_perc):
+    if sim_perc_last != sim_perc:
         pbar.update(1)
 
 
-def drop_it(a, factor):
+def compress(a, factor):
     new = []
     for n, x in enumerate(a):
-        if ((n % factor) == 0):
+        if (n % factor) == 0:
             new.append(x)
     return np.array(new)
 
 
-def compress(a, factor):
-    return drop_it(a, factor)
-
 def main():
-
-    freq_sim = 1e4  # simulation frequency
+    # simulation frequency
+    freq_sim = 1e4
     compress_factor = 3
-    time = pl.arange(0.0, 1, 1. / freq_sim)  # create time slice vector
-    X = np.zeros((time.size, motor.SE.size))  # allocate state vector
-    Xdebug = np.zeros((time.size, motor.DE.size))  # allocate debug data vector
-    Y = np.zeros((time.size, motor.OE.size))  # allocate output vector
-    U = np.zeros((time.size, motor.CE.size))  # allocate input vector
-    X0 = [0, mu.rad_of_deg(0.1), 0, 0, 0]  #
+    # create time slice vector
+    time = pl.arange(0.0, 1, 1. / freq_sim)
+    # allocate state vector
+    X = np.zeros((time.size, motor.SE.size))
+    # allocate debug data vector
+    Xdebug = np.zeros((time.size, motor.DE.size))
+    # allocate output vector
+    Y = np.zeros((time.size, motor.OE.size))
+    # allocate input vector
+    U = np.zeros((time.size, motor.CE.size))
+    X0 = [0, mu.rad_of_deg(0.1), 0, 0, 0]
     X[0, :] = X0
     W = [0, 1]
     pbar = tqdm(total=100)
@@ -75,13 +77,20 @@ def main():
         else:
             Uim2 = U[i - 2, :]
 
-        Y[i - 1, :] = m.output(X[i - 1, :], Uim2)  # get the output for the last step
-        U[i - 1, :] = h.run(0, Y[i - 1, :], time[i - 1])  # run the controller for the last step
-        tmp = integrate.odeint(m.dyn, X[i - 1, :], [time[i - 1], time[i]],
+        # get the output for the last step
+        Y[i - 1, :] = m.output(X[i - 1, :], Uim2)
+        # run the controller for the last step
+        U[i - 1, :] = h.run(0, Y[i - 1, :], time[i - 1])
+        tmp = integrate.odeint(m.dyn,
+                               X[i - 1, :],
+                               [time[i - 1], time[i]],
                                args=(U[i - 1, :], W))  # integrate
-        X[i, :] = tmp[1, :]  # copy integration output to the current step
-        X[i, motor.SE.Theta] = mu.norm_angle(X[i, motor.SE.Theta])  # normalize the angle in the state
-        tmp, Xdebug[i, :] = m.dyn_debug(X[i - 1, :], time[i - 1], U[i - 1, :], W)  # get debug data
+        # copy integration output to the current step
+        X[i, :] = tmp[1, :]
+        # normalize the angle in the state
+        X[i, motor.SE.Theta] = mu.norm_angle(X[i, motor.SE.Theta])
+        # get debug data
+        tmp, Xdebug[i, :] = m.dyn_debug(X[i - 1, :], time[i - 1], U[i - 1, :], W)
         print_simulation_progress(i, time.size, pbar)
     pbar.close()
 
